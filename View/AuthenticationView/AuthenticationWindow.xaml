@@ -15,10 +15,10 @@
         <Border Background="Transparent" CornerRadius="20" x:Name="BorderLogin" Visibility="Visible" Margin="0 50">
             <StackPanel Margin="50">
                 <TextBlock Text="Вход в систему" Style="{StaticResource styleTextBlock}" HorizontalAlignment="Center" Margin="10" FontSize="30"/>
-                <TextBlock Text="Введите логин" Style="{StaticResource styleTextBlock}" HorizontalAlignment="Center" Margin="10"/>
+                <TextBlock Text="Введите почту" Style="{StaticResource styleTextBlock}" HorizontalAlignment="Center" Margin="10"/>
                 
                 <Border Background="WhiteSmoke" Margin="10" CornerRadius="10" Height="40" Width="320" HorizontalAlignment="Center">
-                    <TextBox x:Name="LoginTextBox" Style="{StaticResource styleTextBox}" Margin="5" VerticalAlignment="Center"  />
+                    <TextBox x:Name="MailTextBox" Style="{StaticResource styleTextBox}" Margin="5" VerticalAlignment="Center"  />
                 </Border>
 
                 <TextBlock Text="Введите пароль" Style="{StaticResource styleTextBlock}" HorizontalAlignment="Center" Margin="10"/>
@@ -42,7 +42,7 @@
             <StackPanel Margin="50 150 50 150">
                 <StackPanel Orientation="Horizontal" Margin="10"  Width="320">
                     <Border Background="WhiteSmoke" CornerRadius="10" Height="40" Width="270">
-                        <TextBlock x:Name="CapthaTextBlock" Style="{StaticResource styleTextBlock}" Margin="5"/>
+                        <TextBlock x:Name="CapthaTextBlock" Style="{StaticResource styleTextBlock}" Margin="5" Foreground="Black"/>
                     </Border>
                     <Button x:Name="UpdateCaptha" Click="UpdateCaptha_Click" Width="40" Height="40" Margin="5 0 0 0" Style="{StaticResource styleButton}" Background="Transparent">
                         <Image Source="Image/reload.png"/>

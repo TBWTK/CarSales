@@ -19,13 +19,15 @@ namespace CarSales.View.MainView
             timer.Interval = TimeSpan.FromSeconds(1);
             timer.Tick += new EventHandler(Timer_Tick);
             timer.Start();
+
+            PageChange.Content = new Account.PersonalAccountUserControl(idUser);
         }
 
 
         // Смена пейджей 
         private void AccountPage_Click(object sender, RoutedEventArgs e)
         {
-
+            PageChange.Content = new Account.PersonalAccountUserControl(idUser);
         }
 
         private void CatalogPage_Click(object sender, RoutedEventArgs e)
@@ -35,7 +37,7 @@ namespace CarSales.View.MainView
 
         private void AdminPage_Click(object sender, RoutedEventArgs e)
         {
-
+            PageChange.Content = new Admin.PatchingUserControl();
         }
 
         private void StatPage_Click(object sender, RoutedEventArgs e)

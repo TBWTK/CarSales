@@ -15,10 +15,10 @@
 
             <StackPanel Orientation="Vertical" Margin="40 50 40 40">
                 <TextBlock Text="Регистрация пользователя" Style="{StaticResource styleTextBlock}" HorizontalAlignment="Center" Margin="10" FontSize="30"/>
-                <TextBlock Text="Введите логин" Style="{StaticResource styleTextBlock}" HorizontalAlignment="Center" Margin="10"/>
+                <TextBlock Text="Введите почту" Style="{StaticResource styleTextBlock}" HorizontalAlignment="Center" Margin="10"/>
 
                 <Border Background="WhiteSmoke" Margin="10" CornerRadius="10" Height="40" Width="320" HorizontalAlignment="Center">
-                    <TextBox x:Name="LoginTextBox" Style="{StaticResource styleTextBox}" Margin="5" VerticalAlignment="Center"  />
+                    <TextBox x:Name="MailTextBox" Style="{StaticResource styleTextBox}" Margin="5" VerticalAlignment="Center"  />
                 </Border>
 
 

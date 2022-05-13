@@ -9,6 +9,7 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Threading;
+using CarSales.Model;
 
 namespace CarSales.View.AuthenticationView
 {
@@ -54,31 +55,31 @@ namespace CarSales.View.AuthenticationView
         // Функция регистрации аккаунта
         private void RegistrationSystem(object sender, RoutedEventArgs e)
         {
-            if (PassPassBoxOne.Password != "" && PassPassBoxTwo.Password != "" && (PassPassBoxOne.Password == PassPassBoxTwo.Password) && LoginTextBox.Text != "")
+            if (PassPassBoxOne.Password != "" && PassPassBoxTwo.Password != "" && (PassPassBoxOne.Password == PassPassBoxTwo.Password) && MailTextBox.Text != "")
             {
                 try
                 {
-                    //using (var context = new TestDataBaseEntities())
-                    //{
-                    //    var status = context.Statuses.SingleOrDefault(x => x.NameStatus == "Active");
-                    //    var std = new Users()
-                    //    {
-                    //        Login = LoginTextBox.Text,
-                    //        Password = PassPassBoxOne.Password.Trim(),
-                    //        Status = status.Id
-                    //    };
-                    //    context.Users.Add(std);
-                    //    context.SaveChanges();
+                    using (var context = new CarSalesEntities())
+                    {
+                        var status = context.Statuses.SingleOrDefault(x => x.NameStatus == "Активен");
+                        var std = new Users()
+                        {
+                            Mail = MailTextBox.Text,
+                            Password = PassPassBoxOne.Password.Trim(),
+                            Status = status.Id
+                        };
+                        context.Users.Add(std);
+                        context.SaveChanges();
 
-                    //    var us = context.Users.SingleOrDefault(x => x.Login == LoginTextBox.Text);
-                    //    if (us != null)
-                    //    {
-                    //        MainView.MainWindow mainWindow = new MainView.MainWindow(us.Id);
-                    //        timer.Stop();
-                    //        this.Close();
-                    //        mainWindow.Show();
-                    //    }
-                    //}
+                        var us = context.Users.SingleOrDefault(x => x.Mail == MailTextBox.Text);
+                        if (us != null)
+                        {
+                            MainView.MainWindow mainWindow = new MainView.MainWindow(us.Id);
+                            timer.Stop();
+                            this.Close();
+                            mainWindow.Show();
+                        }
+                    }
                 }
                 catch
                 {

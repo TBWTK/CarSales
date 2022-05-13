@@ -3,15 +3,15 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
-
+using CarSales.Model;
 
 namespace CarSales.View.AuthenticationView
 {
     public partial class AuthenticationWindow : Window
     {
-        string captchaCode;
-        byte iteratorLogin;
-        byte iteratorCaptcha;
+        private string captchaCode;
+        private byte iteratorLogin = 0;
+        private byte iteratorCaptcha;
 
         int tick = 0;
         Point now = new Point(0, 0);
@@ -42,41 +42,40 @@ namespace CarSales.View.AuthenticationView
         // Вход в приложение
         private void EnterSystem(object sender, RoutedEventArgs e)
         {
-            //if (iteratorLogin < 2)
-            //{
-            //    using (var context = new TestDataBaseEntities())
-            //    {
-            //        var us = context.Users.SingleOrDefault(x => x.Login == LoginTextBox.Text && x.Password == PassPassBox.Password.Trim());
-            //        if (us != null)
-            //        {
-            //            if (us.Statuses.NameStatus == "Active")
-            //            {
-            //                MainView.MainWindow main = new MainView.MainWindow(us.Id);
-            //                main.Show();
-            //                timer.Stop();
-            //                this.Close();
-            //                //Application.Current.MainWindow.Close();
-            //            }
-            //            else
-            //            {
-            //                iteratorLogin++;
-            //                MessageBox.Show("Пользователь неактивен обратитесь к администратору");
-            //            }
-            //        }
-            //        else
-            //        {
-            //            iteratorLogin++;
-            //            MessageBox.Show("Неверные данные или пользователя не существует!");
-            //        }
-            //    }
-            //}
-            //else
-            //{
-            //    BorderLogin.Visibility = Visibility.Hidden;
-            //    iteratorLogin = 0;
-            //    BorderCaptcha.Visibility = Visibility.Visible;
-            //    LoadContentCapha();
-            //}
+            if (iteratorLogin < 2)
+            {
+                using (var context = new CarSalesEntities())
+                {
+                    var us = context.Users.SingleOrDefault(x => x.Mail == MailTextBox.Text && x.Password == PassPassBox.Password.Trim());
+                    if (us != null)
+                    {
+                        if (us.Statuses.NameStatus == "Активен")
+                        {
+                            MainView.MainWindow main = new MainView.MainWindow(us.Id);
+                            main.Show();
+                            timer.Stop();
+                            this.Close();
+                        }
+                        else
+                        {
+                            iteratorLogin++;
+                            MessageBox.Show("Пользователь неактивен обратитесь к администратору");
+                        }
+                    }
+                    else
+                    {
+                        iteratorLogin++;
+                        MessageBox.Show("Неверные данные или пользователя не существует!");
+                    }
+                }
+            }
+            else
+            {
+                BorderLogin.Visibility = Visibility.Hidden;
+                iteratorLogin = 0;
+                BorderCaptcha.Visibility = Visibility.Visible;
+                LoadContentCapha();
+            }
         }
 
         // Функции капчи
