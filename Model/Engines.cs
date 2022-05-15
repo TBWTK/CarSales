@@ -24,10 +24,13 @@ namespace CarSales.Model
         public int EngineType { get; set; }
         public int Cylinder { get; set; }
         public int Horsepower { get; set; }
+        public int Capacity { get; set; }
+        public double ConsumptionFuel { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Cars> Cars { get; set; }
         public virtual Cylinders Cylinders { get; set; }
+        public virtual EngineCapacity EngineCapacity { get; set; }
         public virtual EngineTypes EngineTypes { get; set; }
     }
 }

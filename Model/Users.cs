@@ -32,7 +32,6 @@ namespace CarSales.Model
         public string Surname { get; set; }
         public string Lastname { get; set; }
         public byte[] Photo { get; set; }
-
         public string UserGender { get; set; }
         public string UserRole { get; set; }
         public string UserStatus { get; set; }

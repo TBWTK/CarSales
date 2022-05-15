@@ -31,6 +31,7 @@ namespace CarSales.Model
         public virtual DbSet<Cars> Cars { get; set; }
         public virtual DbSet<Colors> Colors { get; set; }
         public virtual DbSet<Cylinders> Cylinders { get; set; }
+        public virtual DbSet<EngineCapacity> EngineCapacity { get; set; }
         public virtual DbSet<Engines> Engines { get; set; }
         public virtual DbSet<EngineTypes> EngineTypes { get; set; }
         public virtual DbSet<Fuels> Fuels { get; set; }

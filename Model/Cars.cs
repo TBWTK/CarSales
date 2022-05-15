@@ -25,15 +25,15 @@ namespace CarSales.Model
         public int MarkModel { get; set; }
         public string Vin { get; set; }
         public string StateNumber { get; set; }
-        public System.DateTime Year { get; set; }
+        public int Year { get; set; }
         public int Color { get; set; }
         public int Transmission { get; set; }
         public int Handlebar { get; set; }
         public int Wheeldrive { get; set; }
         public int Bodywork { get; set; }
-        public Nullable<int> Engine { get; set; }
+        public int Engine { get; set; }
         public string Mileage { get; set; }
-        public Nullable<int> NumOfOwners { get; set; }
+        public int NumOfOwners { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Advertisements> Advertisements { get; set; }

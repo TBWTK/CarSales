@@ -12,20 +12,18 @@ namespace CarSales.Model
     using System;
     using System.Collections.Generic;
     
-    public partial class EngineTypes
+    public partial class EngineCapacity
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public EngineTypes()
+        public EngineCapacity()
         {
             this.Engines = new HashSet<Engines>();
         }
     
         public int Id { get; set; }
-        public int Fuel { get; set; }
-        public string NameEngineType { get; set; }
+        public string NameEngineCapacity { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Engines> Engines { get; set; }
-        public virtual Fuels Fuels { get; set; }
     }
 }

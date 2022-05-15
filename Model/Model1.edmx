@@ -38,17 +38,17 @@
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="MarkModel" Type="int" Nullable="false" />
-          <Property Name="Vin" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="StateNumber" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="Year" Type="date" Nullable="false" />
+          <Property Name="Vin" Type="varchar" MaxLength="50" />
+          <Property Name="StateNumber" Type="varchar" MaxLength="50" />
+          <Property Name="Year" Type="int" Nullable="false" />
           <Property Name="Color" Type="int" Nullable="false" />
           <Property Name="Transmission" Type="int" Nullable="false" />
           <Property Name="Handlebar" Type="int" Nullable="false" />
           <Property Name="Wheeldrive" Type="int" Nullable="false" />
           <Property Name="Bodywork" Type="int" Nullable="false" />
-          <Property Name="Engine" Type="int" />
+          <Property Name="Engine" Type="int" Nullable="false" />
           <Property Name="Mileage" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="NumOfOwners" Type="int" />
+          <Property Name="NumOfOwners" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Colors">
           <Key>
@@ -64,6 +64,13 @@
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="NameCylinder" Type="varchar" MaxLength="50" />
         </EntityType>
+        <EntityType Name="EngineCapacity">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="NameEngineCapacity" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
         <EntityType Name="Engines">
           <Key>
             <PropertyRef Name="Id" />
@@ -72,14 +79,16 @@
           <Property Name="EngineType" Type="int" Nullable="false" />
           <Property Name="Cylinder" Type="int" Nullable="false" />
           <Property Name="Horsepower" Type="int" Nullable="false" />
+          <Property Name="Capacity" Type="int" Nullable="false" />
+          <Property Name="ConsumptionFuel" Type="float" Nullable="false" />
         </EntityType>
         <EntityType Name="EngineTypes">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Fuel" Type="int" />
-          <Property Name="Consumption" Type="nchar" MaxLength="10" />
+          <Property Name="Fuel" Type="int" Nullable="false" />
+          <Property Name="NameEngineType" Type="varchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <EntityType Name="Fuels">
           <Key>
@@ -273,7 +282,7 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Cars_Engines">
-          <End Role="Engines" Type="Self.Engines" Multiplicity="0..1" />
+          <End Role="Engines" Type="Self.Engines" Multiplicity="1" />
           <End Role="Cars" Type="Self.Cars" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Engines">
@@ -344,6 +353,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Engines_EngineCapacity">
+          <End Role="EngineCapacity" Type="Self.EngineCapacity" Multiplicity="1" />
+          <End Role="Engines" Type="Self.Engines" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EngineCapacity">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Engines">
+              <PropertyRef Name="Capacity" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Engines_EngineTypes">
           <End Role="EngineTypes" Type="Self.EngineTypes" Multiplicity="1" />
           <End Role="Engines" Type="Self.Engines" Multiplicity="*" />
@@ -357,7 +378,7 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_EngineTypes_Fuels">
-          <End Role="Fuels" Type="Self.Fuels" Multiplicity="0..1" />
+          <End Role="Fuels" Type="Self.Fuels" Multiplicity="1" />
           <End Role="EngineTypes" Type="Self.EngineTypes" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Fuels">
@@ -447,6 +468,7 @@
           <EntitySet Name="Cars" EntityType="Self.Cars" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Colors" EntityType="Self.Colors" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Cylinders" EntityType="Self.Cylinders" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="EngineCapacity" EntityType="Self.EngineCapacity" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Engines" EntityType="Self.Engines" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="EngineTypes" EntityType="Self.EngineTypes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Fuels" EntityType="Self.Fuels" Schema="dbo" store:Type="Tables" />
@@ -512,6 +534,10 @@
           </AssociationSet>
           <AssociationSet Name="FK_Engines_Cylinders" Association="Self.FK_Engines_Cylinders">
             <End Role="Cylinders" EntitySet="Cylinders" />
+            <End Role="Engines" EntitySet="Engines" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Engines_EngineCapacity" Association="Self.FK_Engines_EngineCapacity">
+            <End Role="EngineCapacity" EntitySet="EngineCapacity" />
             <End Role="Engines" EntitySet="Engines" />
           </AssociationSet>
           <AssociationSet Name="FK_Engines_EngineTypes" Association="Self.FK_Engines_EngineTypes">
@@ -592,17 +618,17 @@
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="MarkModel" Type="Int32" Nullable="false" />
-          <Property Name="Vin" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="StateNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Year" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="Vin" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="StateNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Year" Type="Int32" Nullable="false" />
           <Property Name="Color" Type="Int32" Nullable="false" />
           <Property Name="Transmission" Type="Int32" Nullable="false" />
           <Property Name="Handlebar" Type="Int32" Nullable="false" />
           <Property Name="Wheeldrive" Type="Int32" Nullable="false" />
           <Property Name="Bodywork" Type="Int32" Nullable="false" />
-          <Property Name="Engine" Type="Int32" />
+          <Property Name="Engine" Type="Int32" Nullable="false" />
           <Property Name="Mileage" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="NumOfOwners" Type="Int32" />
+          <Property Name="NumOfOwners" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Advertisements" Relationship="Self.FK_Advertisements_Cars" FromRole="Cars" ToRole="Advertisements" />
           <NavigationProperty Name="Bodyworks" Relationship="Self.FK_Cars_Bodyworks" FromRole="Cars" ToRole="Bodyworks" />
           <NavigationProperty Name="Colors" Relationship="Self.FK_Cars_Colors" FromRole="Cars" ToRole="Colors" />
@@ -629,6 +655,14 @@
           <Property Name="NameCylinder" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="Engines" Relationship="Self.FK_Engines_Cylinders" FromRole="Cylinders" ToRole="Engines" />
         </EntityType>
+        <EntityType Name="EngineCapacity">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="NameEngineCapacity" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Engines" Relationship="Self.FK_Engines_EngineCapacity" FromRole="EngineCapacity" ToRole="Engines" />
+        </EntityType>
         <EntityType Name="Engines">
           <Key>
             <PropertyRef Name="Id" />
@@ -637,8 +671,11 @@
           <Property Name="EngineType" Type="Int32" Nullable="false" />
           <Property Name="Cylinder" Type="Int32" Nullable="false" />
           <Property Name="Horsepower" Type="Int32" Nullable="false" />
+          <Property Name="Capacity" Type="Int32" Nullable="false" />
+          <Property Name="ConsumptionFuel" Type="Double" Nullable="false" />
           <NavigationProperty Name="Cars" Relationship="Self.FK_Cars_Engines" FromRole="Engines" ToRole="Cars" />
           <NavigationProperty Name="Cylinders" Relationship="Self.FK_Engines_Cylinders" FromRole="Engines" ToRole="Cylinders" />
+          <NavigationProperty Name="EngineCapacity" Relationship="Self.FK_Engines_EngineCapacity" FromRole="Engines" ToRole="EngineCapacity" />
           <NavigationProperty Name="EngineTypes" Relationship="Self.FK_Engines_EngineTypes" FromRole="Engines" ToRole="EngineTypes" />
         </EntityType>
         <EntityType Name="EngineTypes">
@@ -646,8 +683,8 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Fuel" Type="Int32" />
-          <Property Name="Consumption" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="Fuel" Type="Int32" Nullable="false" />
+          <Property Name="NameEngineType" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
           <NavigationProperty Name="Engines" Relationship="Self.FK_Engines_EngineTypes" FromRole="EngineTypes" ToRole="Engines" />
           <NavigationProperty Name="Fuels" Relationship="Self.FK_EngineTypes_Fuels" FromRole="EngineTypes" ToRole="Fuels" />
         </EntityType>
@@ -862,7 +899,7 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Cars_Engines">
-          <End Role="Engines" Type="Self.Engines" Multiplicity="0..1" />
+          <End Role="Engines" Type="Self.Engines" Multiplicity="1" />
           <End Role="Cars" Type="Self.Cars" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Engines">
@@ -945,6 +982,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Engines_EngineCapacity">
+          <End Role="EngineCapacity" Type="Self.EngineCapacity" Multiplicity="1" />
+          <End Role="Engines" Type="Self.Engines" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EngineCapacity">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Engines">
+              <PropertyRef Name="Capacity" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Engines_EngineTypes">
           <End Role="EngineTypes" Type="Self.EngineTypes" Multiplicity="1" />
           <End Role="Engines" Type="Self.Engines" Multiplicity="*" />
@@ -958,7 +1007,7 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_EngineTypes_Fuels">
-          <End Role="Fuels" Type="Self.Fuels" Multiplicity="0..1" />
+          <End Role="Fuels" Type="Self.Fuels" Multiplicity="1" />
           <End Role="EngineTypes" Type="Self.EngineTypes" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Fuels">
@@ -1036,6 +1085,7 @@
           <EntitySet Name="Cars" EntityType="Self.Cars" />
           <EntitySet Name="Colors" EntityType="Self.Colors" />
           <EntitySet Name="Cylinders" EntityType="Self.Cylinders" />
+          <EntitySet Name="EngineCapacity" EntityType="Self.EngineCapacity" />
           <EntitySet Name="Engines" EntityType="Self.Engines" />
           <EntitySet Name="EngineTypes" EntityType="Self.EngineTypes" />
           <EntitySet Name="Fuels" EntityType="Self.Fuels" />
@@ -1105,6 +1155,10 @@
           </AssociationSet>
           <AssociationSet Name="FK_Engines_Cylinders" Association="Self.FK_Engines_Cylinders">
             <End Role="Cylinders" EntitySet="Cylinders" />
+            <End Role="Engines" EntitySet="Engines" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Engines_EngineCapacity" Association="Self.FK_Engines_EngineCapacity">
+            <End Role="EngineCapacity" EntitySet="EngineCapacity" />
             <End Role="Engines" EntitySet="Engines" />
           </AssociationSet>
           <AssociationSet Name="FK_Engines_EngineTypes" Association="Self.FK_Engines_EngineTypes">
@@ -1207,6 +1261,14 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="EngineCapacity">
+            <EntityTypeMapping TypeName="CarSalesModel.EngineCapacity">
+              <MappingFragment StoreEntitySet="EngineCapacity">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="NameEngineCapacity" ColumnName="NameEngineCapacity" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="Engines">
             <EntityTypeMapping TypeName="CarSalesModel.Engines">
               <MappingFragment StoreEntitySet="Engines">
@@ -1214,6 +1276,8 @@
                 <ScalarProperty Name="EngineType" ColumnName="EngineType" />
                 <ScalarProperty Name="Cylinder" ColumnName="Cylinder" />
                 <ScalarProperty Name="Horsepower" ColumnName="Horsepower" />
+                <ScalarProperty Name="Capacity" ColumnName="Capacity" />
+                <ScalarProperty Name="ConsumptionFuel" ColumnName="ConsumptionFuel" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1222,7 +1286,7 @@
               <MappingFragment StoreEntitySet="EngineTypes">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Fuel" ColumnName="Fuel" />
-                <ScalarProperty Name="Consumption" ColumnName="Consumption" />
+                <ScalarProperty Name="NameEngineType" ColumnName="NameEngineType" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

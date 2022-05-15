@@ -32,7 +32,7 @@ namespace CarSales.View.MainView
 
         private void CatalogPage_Click(object sender, RoutedEventArgs e)
         {
-
+            PageChange.Content = new Catalog.AdvertisementsUserControl(idUser);
         }
 
         private void AdminPage_Click(object sender, RoutedEventArgs e)
