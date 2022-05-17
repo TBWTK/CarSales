@@ -4,8 +4,29 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:CarSales.View.MainView.Catalog"
+             xmlns:model="clr-namespace:CarSales.Model"             
+             xmlns:col="clr-namespace:System.Collections;assembly=mscorlib"
              mc:Ignorable="d" 
              d:DesignHeight="700" d:DesignWidth="1200">
+
+    <UserControl.Resources>
+        <DataTemplate x:Key="listTemplateSmall">
+            <StackPanel Height="300">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="{Binding Path=Vin}" Style="{StaticResource styleTextBlock}" Margin="5 0"/>
+                    <TextBlock Text="{Binding Path=StateNumber}" Style="{StaticResource styleTextBlock}" Margin="5 0"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Цена мин/руб: " Style="{StaticResource styleTextBlock}" Margin="5 0"/>
+                    <TextBlock Text="{Binding Path=Advertisements.Price}" Style="{StaticResource styleTextBlock}" Margin="5 0"/>
+                </StackPanel>
+                <Image x:Name="PhotoCarSource"  Width="350" Height="200" Source="{Binding Path=Photos.Photo}" Margin="5"/>
+                <Button x:Name="ButtonChoice" Content="Выбрать" Style="{StaticResource styleButton}"/>
+            </StackPanel>
+        </DataTemplate>
+    </UserControl.Resources>
+
+
     <Grid Background="Black">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="0.4*"/>
@@ -30,64 +51,64 @@
                 </Grid.RowDefinitions>
 
                 <TextBlock Grid.Column="0" Grid.Row="0" Text="Бренд" Style="{StaticResource styleTextBlock}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                <ComboBox Grid.Column="1" Grid.Row="0" x:Name="MarksComboBox" Height="40" Width="200" Margin="10" SelectionChanged="BrandComboBox_SelectionChanged">
+                <ComboBox Grid.Column="1" Grid.Row="0" x:Name="MarksComboBox" Height="40" Width="200" Margin="10" SelectionChanged="MarksComboBox_SelectionChanged">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding NameMark}" Style="{StaticResource styleTextBlock}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                            <TextBlock Text="{Binding NameMark}" Style="{StaticResource styleTextBlock}" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Black"/>
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
                 </ComboBox>
 
                 <TextBlock Grid.Column="0" Grid.Row="1" Text="Модель" Style="{StaticResource styleTextBlock}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                <ComboBox Grid.Column="1" Grid.Row="1" x:Name="ModelsComboBox" Height="40" Width="200" Margin="10" SelectionChanged="BrandComboBox_SelectionChanged">
+                <ComboBox Grid.Column="1" Grid.Row="1" x:Name="ModelsComboBox" Height="40" Width="200" Margin="10" SelectionChanged="ModelsComboBox_SelectionChanged">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding NameModel}" Style="{StaticResource styleTextBlock}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                            <TextBlock Text="{Binding NameModel}" Style="{StaticResource styleTextBlock}" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Black"/>
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
                 </ComboBox>
 
                 <TextBlock Grid.Column="0" Grid.Row="2" Text="Цвет" Style="{StaticResource styleTextBlock}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                <ComboBox Grid.Column="1" Grid.Row="2" x:Name="ColorsComboBox" Height="40" Width="200" Margin="10" SelectionChanged="BrandComboBox_SelectionChanged">
+                <ComboBox Grid.Column="1" Grid.Row="2" x:Name="ColorsComboBox" Height="40" Width="200" Margin="10" SelectionChanged="ColorsComboBox_SelectionChanged">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding NameColor}" Style="{StaticResource styleTextBlock}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                            <TextBlock Text="{Binding NameColor}" Style="{StaticResource styleTextBlock}" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Black"/>
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
                 </ComboBox>
 
                 <TextBlock Grid.Column="0" Grid.Row="3" Text="Коробка" Style="{StaticResource styleTextBlock}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                <ComboBox Grid.Column="1" Grid.Row="3" x:Name="TransmissionsComboBox" Height="40" Width="200" Margin="10" SelectionChanged="BrandComboBox_SelectionChanged">
+                <ComboBox Grid.Column="1" Grid.Row="3" x:Name="TransmissionsComboBox" Height="40" Width="200" Margin="10" SelectionChanged="TransmissionsComboBox_SelectionChanged">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding NameTransmission}" Style="{StaticResource styleTextBlock}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                            <TextBlock Text="{Binding NameTransmission}" Style="{StaticResource styleTextBlock}" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Black"/>
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
                 </ComboBox>
 
                 <TextBlock Grid.Column="0" Grid.Row="4" Text="Руль" Style="{StaticResource styleTextBlock}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                <ComboBox Grid.Column="1" Grid.Row="4" x:Name="HandlebarsComboBox" Height="40" Width="200" Margin="10" SelectionChanged="BrandComboBox_SelectionChanged">
+                <ComboBox Grid.Column="1" Grid.Row="4" x:Name="HandlebarsComboBox" Height="40" Width="200" Margin="10" SelectionChanged="HandlebarsComboBox_SelectionChanged">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding NameHandlebar}" Style="{StaticResource styleTextBlock}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                            <TextBlock Text="{Binding NameHandlebar}" Style="{StaticResource styleTextBlock}" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Black"/>
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
                 </ComboBox>
                 
                 <TextBlock Grid.Column="0" Grid.Row="5" Text="Привод" Style="{StaticResource styleTextBlock}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                <ComboBox Grid.Column="1" Grid.Row="5" x:Name="WheeldrivesComboBox" Height="40" Width="200" Margin="10" SelectionChanged="BrandComboBox_SelectionChanged">
+                <ComboBox Grid.Column="1" Grid.Row="5" x:Name="WheeldrivesComboBox" Height="40" Width="200" Margin="10" SelectionChanged="WheeldrivesComboBox_SelectionChanged">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding NameWheeldrive}" Style="{StaticResource styleTextBlock}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                            <TextBlock Text="{Binding NameWheeldrive}" Style="{StaticResource styleTextBlock}" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Black"/>
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
                 </ComboBox>
 
                 <TextBlock Grid.Column="0" Grid.Row="6" Text="Кузов" Style="{StaticResource styleTextBlock}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                <ComboBox Grid.Column="1" Grid.Row="6" x:Name="BodyworksComboBox" Height="40" Width="200" Margin="10" SelectionChanged="BrandComboBox_SelectionChanged">
+                <ComboBox Grid.Column="1" Grid.Row="6" x:Name="BodyworksComboBox" Height="40" Width="200" Margin="10" SelectionChanged="BodyworksComboBox_SelectionChanged">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding NameBodywork}" Style="{StaticResource styleTextBlock}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                            <TextBlock Text="{Binding NameBodywork}" Style="{StaticResource styleTextBlock}" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Black"/>
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
                 </ComboBox>
@@ -97,5 +118,36 @@
 
 
 
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="0.2*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <StackPanel Grid.Row="0" Orientation="Horizontal">
+                <TextBlock Text="Здесь бдует переключение и корзина" Style="{StaticResource styleTextBlock}"/>
+            </StackPanel>
+
+            <ListBox x:Name="CatalogListBox" Grid.Row="1" Background="Transparent" BorderBrush="Pink">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Height="300" Width="300">
+                            <Image Source="{Binding Path=Cars.Photos.Photo}"/>
+                            <TextBlock Style="{StaticResource styleTextBlock}" Text="{Binding Path=Price}"/>
+                            <TextBlock Style="{StaticResource styleTextBlock}" Text="{Binding Path=Cars.Vin}"/>
+                            <TextBlock Style="{StaticResource styleTextBlock}" Text="{Binding Path=Cars.Colors.NameColor}"/>
+                            <TextBlock Style="{StaticResource styleTextBlock}" Text="{Binding Path=Cars.Handlebars.NameHandlebar}"/>
+                            <TextBlock Style="{StaticResource styleTextBlock}" Text="{Binding Path=Cars.Models.NameModel}"/>
+                            <TextBlock Style="{StaticResource styleTextBlock}" Text="{Binding Path=Cars.Models.Marks.NameMark}"/>
+                        </StackPanel>
+
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </Grid>
+
+
+        
+        
     </Grid>
 </UserControl>
