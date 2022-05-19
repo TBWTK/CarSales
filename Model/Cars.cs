@@ -36,6 +36,7 @@ namespace CarSales.Model
         public int NumOfOwners { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public List<Photos> photoCar { get; set; }
         public virtual ICollection<Advertisements> Advertisements { get; set; }
         public virtual Bodyworks Bodyworks { get; set; }
         public virtual Colors Colors { get; set; }

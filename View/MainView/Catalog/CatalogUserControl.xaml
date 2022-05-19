@@ -10,18 +10,66 @@
              d:DesignHeight="700" d:DesignWidth="1200">
 
     <UserControl.Resources>
-        <DataTemplate x:Key="listTemplateSmall">
-            <StackPanel Height="300">
+        <DataTemplate x:Key="TemplateListCatalog">
+            <StackPanel Height="500" Width="800" HorizontalAlignment="Center">
+
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="{Binding Path=Vin}" Style="{StaticResource styleTextBlock}" Margin="5 0"/>
-                    <TextBlock Text="{Binding Path=StateNumber}" Style="{StaticResource styleTextBlock}" Margin="5 0"/>
+
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                        <TextBlock Style="{StaticResource styleTextBlock}" Text="{Binding Path=Cars.Models.Marks.NameMark}"/>
+                        <TextBlock Style="{StaticResource styleTextBlock}" Text=" "/>
+                        <TextBlock Style="{StaticResource styleTextBlock}" Text="{Binding Path=Cars.Models.NameModel}"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                        <TextBlock Style="{StaticResource styleTextBlock}" Text="Цена: "/>
+                        <TextBlock Style="{StaticResource styleTextBlock}" Text="{Binding Path=Price}"/>
+                    </StackPanel>
                 </StackPanel>
+
+                <ListView ItemsSource="{Binding Path=Cars.photoCar}"  Background="Transparent" BorderBrush="Transparent">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel HorizontalAlignment="Stretch"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Vertical" Width="700">
+                                <Image Source="{Binding Path=Photo}" Height="350"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                    <TextBlock Style="{StaticResource styleTextBlock}" Text="VIN: "/>
+                    <TextBlock Style="{StaticResource styleTextBlock}" Text="{Binding Path=Cars.Vin}"/>
+                    <TextBlock Style="{StaticResource styleTextBlock}" Text="   Год: "/>
+                    <TextBlock Style="{StaticResource styleTextBlock}" Text="{Binding Path=Cars.Year}"/>
+                    <TextBlock Style="{StaticResource styleTextBlock}" Text="   Госномер: "/>
+                    <TextBlock Style="{StaticResource styleTextBlock}" Text="{Binding Path=Cars.StateNumber}"/>
+                </StackPanel>
+
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="Цена мин/руб: " Style="{StaticResource styleTextBlock}" Margin="5 0"/>
-                    <TextBlock Text="{Binding Path=Advertisements.Price}" Style="{StaticResource styleTextBlock}" Margin="5 0"/>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                        <TextBlock Style="{StaticResource styleTextBlock}" Text="Цвет: "/>
+                        <TextBlock Style="{StaticResource styleTextBlock}" Text="{Binding Path=Cars.Colors.NameColor}"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                        <TextBlock Style="{StaticResource styleTextBlock}" Text="Руль: "/>
+                        <TextBlock Style="{StaticResource styleTextBlock}" Text="{Binding Path=Cars.Handlebars.NameHandlebar}"/>
+                    </StackPanel>
                 </StackPanel>
-                <Image x:Name="PhotoCarSource"  Width="350" Height="200" Source="{Binding Path=Photos.Photo}" Margin="5"/>
-                <Button x:Name="ButtonChoice" Content="Выбрать" Style="{StaticResource styleButton}"/>
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                    <TextBlock Style="{StaticResource styleTextBlock}" Text="Привод: "/>
+                    <TextBlock Style="{StaticResource styleTextBlock}" Text="{Binding Path=Cars.Wheeldrives.NameWheeldrive}"/>
+                    <TextBlock Style="{StaticResource styleTextBlock}" Text="   Кузов: "/>
+                    <TextBlock Style="{StaticResource styleTextBlock}" Text="{Binding Path=Cars.Bodyworks.NameBodywork}"/>
+                </StackPanel>
+
+                <Button x:Name="ButtonChoice" Content="Выбрать" Click="ButtonChoice_Click" Style="{StaticResource styleButton}"/>
             </StackPanel>
         </DataTemplate>
     </UserControl.Resources>
@@ -114,6 +162,8 @@
                 </ComboBox>
 
             </Grid>
+
+            <Button x:Name="ClearSearch" Style="{StaticResource styleButton}" Height="40" Width="200" Content="Отчистить поиск" Click="ClearSearch_Click"/>
         </StackPanel>
 
 
@@ -124,26 +174,40 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <StackPanel Grid.Row="0" Orientation="Horizontal">
-                <TextBlock Text="Здесь бдует переключение и корзина" Style="{StaticResource styleTextBlock}"/>
+            <StackPanel Grid.Row="0">
+                <TextBlock Text="Отображение каталога" Style="{StaticResource styleTextBlock}"/>
+                <StackPanel HorizontalAlignment="Left" Orientation="Horizontal">
+                    <RadioButton x:Name="OneProduct" Style="{StaticResource StyleRadioButton}" Height="40" Width="150" Margin="10 19" Content="Витрина 1" Click="OneProduct_Click"/>
+                    <RadioButton x:Name="FourProduct" Style="{StaticResource StyleRadioButton}" Height="40" Width="150" Margin="10 19" Content="Витрина 2" Click="FourProduct_Click"/>
+                    <RadioButton x:Name="ListProduct" Style="{StaticResource StyleRadioButton}" Height="40" Width="150" Margin="10 19" Content="Список" Click="ListProduct_Click" IsChecked="True"/>
+
+                    <Grid>
+                        <StackPanel Orientation="Horizontal" Visibility="Hidden" x:Name="ButtonHadlerOneProductDisplay">
+                            <Button x:Name="ButtonPreviousOneProduct" Margin="5" Content="Назад" Style="{StaticResource styleButton}" Height="40" Width="80" Click="ButtonPreviousOneProduct_Click"/>
+                            <Button x:Name="ButtonNextOneProduct"  Margin="5" Content="Вперед" Style="{StaticResource styleButton}" Height="40" Width="80" Click="ButtonNextOneProduct_Click"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Visibility="Hidden" x:Name="ButtonHadlerFourProductDisplay">
+                            <Button x:Name="ButtonPreviousFourProduct" Margin="5" Content="Назад" Style="{StaticResource styleButton}" Height="40" Width="80" Click="ButtonPreviousFourProduct_Click"/>
+                            <Button x:Name="ButtonNextFourProduct"  Margin="5" Content="Вперед" Style="{StaticResource styleButton}" Height="40" Width="80" Click="ButtonNextFourProduct_Click"/>
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
+
             </StackPanel>
 
-            <ListBox x:Name="CatalogListBox" Grid.Row="1" Background="Transparent" BorderBrush="Pink">
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel Height="300" Width="300">
-                            <Image Source="{Binding Path=Cars.Photos.Photo}"/>
-                            <TextBlock Style="{StaticResource styleTextBlock}" Text="{Binding Path=Price}"/>
-                            <TextBlock Style="{StaticResource styleTextBlock}" Text="{Binding Path=Cars.Vin}"/>
-                            <TextBlock Style="{StaticResource styleTextBlock}" Text="{Binding Path=Cars.Colors.NameColor}"/>
-                            <TextBlock Style="{StaticResource styleTextBlock}" Text="{Binding Path=Cars.Handlebars.NameHandlebar}"/>
-                            <TextBlock Style="{StaticResource styleTextBlock}" Text="{Binding Path=Cars.Models.NameModel}"/>
-                            <TextBlock Style="{StaticResource styleTextBlock}" Text="{Binding Path=Cars.Models.Marks.NameMark}"/>
-                        </StackPanel>
+            <Grid Grid.Row="1">
+                <ScrollViewer Height="580">
+                    <ListBox x:Name="CatalogListBox" Grid.Row="1" Background="Transparent" BorderBrush="Transparent" ItemTemplate="{StaticResource TemplateListCatalog}"
+                      ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                        <ListBox.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel />
+                            </ItemsPanelTemplate>
+                        </ListBox.ItemsPanel>
+                    </ListBox>
+                </ScrollViewer>
 
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
+            </Grid>
         </Grid>
 
 

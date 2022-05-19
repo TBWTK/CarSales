@@ -10,7 +10,7 @@
         <TextBlock Text="Создать объявление" Style="{StaticResource styleTextBlock}" FontSize="30" Margin="20" HorizontalAlignment="Center" VerticalAlignment="Top"/>
         
         <!--Grid для заполения основных полей машины-->
-        <Grid x:Name="BaseCar" Margin="200 60" Visibility="Hidden">
+        <Grid x:Name="BaseCar" Margin="200 60" Visibility="Visible">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
@@ -221,7 +221,7 @@
 
         
         <!--Grid для создания объявления-->
-        <Grid x:Name="AdvertisementCreate" Margin="200 60" Visibility="Visible">
+        <Grid x:Name="AdvertisementCreate" Margin="200 60" Visibility="Hidden">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
