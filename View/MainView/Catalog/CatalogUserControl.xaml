@@ -10,11 +10,41 @@
              d:DesignHeight="700" d:DesignWidth="1200">
 
     <UserControl.Resources>
+
+        <DataTemplate x:Key="listTemplateSmall">
+            <StackPanel Height="300">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="{Binding Path=Cars.Models.Marks.NameMark}" Style="{StaticResource styleTextBlock}" Margin="5 0"/>
+                    <TextBlock Text="{Binding Path=Cars.Models.NameModel}" Style="{StaticResource styleTextBlock}" Margin="5 0"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Цена руб: " Style="{StaticResource styleTextBlock}" Margin="5 0"/>
+                    <TextBlock Text="{Binding Path=Price}" Style="{StaticResource styleTextBlock}" Margin="5 0"/>
+                </StackPanel>
+                <Image Width="350" Height="200" Source="{Binding Path=Cars.photoCar[0].Photo}" Margin="5"/>
+                <Button x:Name="ButtonChoice" Content="Добавить в корзину" Click="ButtonChoice_Click" Style="{StaticResource styleButton}" HorizontalAlignment="Center"/>
+            </StackPanel>
+        </DataTemplate>
+
+        <DataTemplate x:Key="TemplateBasket">
+            <StackPanel Height="300">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="{Binding Path=Cars.Models.Marks.NameMark}" Style="{StaticResource styleTextBlock}" Margin="5 0"/>
+                    <TextBlock Text="{Binding Path=Cars.Models.NameModel}" Style="{StaticResource styleTextBlock}" Margin="5 0"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Цена руб: " Style="{StaticResource styleTextBlock}" Margin="5 0"/>
+                    <TextBlock Text="{Binding Path=Price}" Style="{StaticResource styleTextBlock}" Margin="5 0"/>
+                </StackPanel>
+                <Image Width="350" Height="200" Source="{Binding Path=Cars.photoCar[0].Photo}" Margin="5"/>
+                <Button x:Name="DeleteProduct" Content="Удалить из корзины" Click="DeleteProduct_Click" Style="{StaticResource styleButton}" HorizontalAlignment="Center"/>
+            </StackPanel>
+        </DataTemplate>
+
         <DataTemplate x:Key="TemplateListCatalog">
             <StackPanel Height="500" Width="800" HorizontalAlignment="Center">
 
                 <StackPanel Orientation="Horizontal">
-
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
                         <TextBlock Style="{StaticResource styleTextBlock}" Text="{Binding Path=Cars.Models.Marks.NameMark}"/>
                         <TextBlock Style="{StaticResource styleTextBlock}" Text=" "/>
@@ -69,149 +99,246 @@
                     <TextBlock Style="{StaticResource styleTextBlock}" Text="{Binding Path=Cars.Bodyworks.NameBodywork}"/>
                 </StackPanel>
 
-                <Button x:Name="ButtonChoice" Content="Выбрать" Click="ButtonChoice_Click" Style="{StaticResource styleButton}"/>
+                <Button x:Name="ButtonChoice" Content="Добавить в корзину" Click="ButtonChoice_Click" Style="{StaticResource styleButton}" HorizontalAlignment="Center"/>
             </StackPanel>
         </DataTemplate>
     </UserControl.Resources>
 
 
-    <Grid Background="Black">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="0.4*"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
+    <Grid>
+        <Grid Background="Black" x:Name="CatalogGrid" Visibility="Visible">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0.4*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
 
-        <StackPanel Grid.Column="0">
-            <TextBlock Text="Фильтры поиска" Style="{StaticResource styleTextBlock}" HorizontalAlignment="Center" Margin="5"/>
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="0.5*"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="0">
+                <TextBlock Text="Фильтры поиска" Style="{StaticResource styleTextBlock}" FontSize="28" HorizontalAlignment="Center" Margin="5"/>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0.5*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Column="0" Grid.Row="0" Text="Бренд" Style="{StaticResource styleTextBlock}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <ComboBox Grid.Column="1" Grid.Row="0" x:Name="MarksComboBox" Height="30" Width="200" Margin="10" SelectionChanged="MarksComboBox_SelectionChanged">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding NameMark}" Style="{StaticResource styleTextBlock}" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Black"/>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+
+                    <TextBlock Grid.Column="0" Grid.Row="1" Text="Модель" Style="{StaticResource styleTextBlock}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <ComboBox Grid.Column="1" Grid.Row="1" x:Name="ModelsComboBox" Height="30" Width="200" Margin="10" SelectionChanged="ModelsComboBox_SelectionChanged">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding NameModel}" Style="{StaticResource styleTextBlock}" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Black"/>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+
+                    <TextBlock Grid.Column="0" Grid.Row="2" Text="Цвет" Style="{StaticResource styleTextBlock}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <ComboBox Grid.Column="1" Grid.Row="2" x:Name="ColorsComboBox" Height="30" Width="200" Margin="10" SelectionChanged="ColorsComboBox_SelectionChanged">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding NameColor}" Style="{StaticResource styleTextBlock}" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Black"/>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+
+                    <TextBlock Grid.Column="0" Grid.Row="3" Text="Коробка" Style="{StaticResource styleTextBlock}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <ComboBox Grid.Column="1" Grid.Row="3" x:Name="TransmissionsComboBox" Height="30" Width="200" Margin="10" SelectionChanged="TransmissionsComboBox_SelectionChanged">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding NameTransmission}" Style="{StaticResource styleTextBlock}" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Black"/>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+
+                    <TextBlock Grid.Column="0" Grid.Row="4" Text="Руль" Style="{StaticResource styleTextBlock}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <ComboBox Grid.Column="1" Grid.Row="4" x:Name="HandlebarsComboBox" Height="30" Width="200" Margin="10" SelectionChanged="HandlebarsComboBox_SelectionChanged">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding NameHandlebar}" Style="{StaticResource styleTextBlock}" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Black"/>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+
+                    <TextBlock Grid.Column="0" Grid.Row="5" Text="Привод" Style="{StaticResource styleTextBlock}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <ComboBox Grid.Column="1" Grid.Row="5" x:Name="WheeldrivesComboBox" Height="30" Width="200" Margin="10" SelectionChanged="WheeldrivesComboBox_SelectionChanged">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding NameWheeldrive}" Style="{StaticResource styleTextBlock}" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Black"/>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+
+                    <TextBlock Grid.Column="0" Grid.Row="6" Text="Кузов" Style="{StaticResource styleTextBlock}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <ComboBox Grid.Column="1" Grid.Row="6" x:Name="BodyworksComboBox" Height="30" Width="200" Margin="10" SelectionChanged="BodyworksComboBox_SelectionChanged">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding NameBodywork}" Style="{StaticResource styleTextBlock}" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Black"/>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+
+                    <TextBlock Grid.Column="0" Grid.Row="7" Text="Год" Style="{StaticResource styleTextBlock}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="7" Margin="15 10 0 10">
+                        <TextBlock  Text="От: " Style="{StaticResource styleTextBlock}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <TextBox x:Name="YearStart" Style="{StaticResource styleTextBox}" Width="60" Background="Transparent" Foreground="White" TextChanged="YearStart_TextChanged"/>
+                        <TextBlock  Text=" До: " Style="{StaticResource styleTextBlock}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <TextBox x:Name="YearEnd" Style="{StaticResource styleTextBox}" Width="60" Background="Transparent" Foreground="White" TextChanged="YearEnd_TextChanged"/>
+                    </StackPanel>
+
+                    <TextBlock Grid.Column="0" Grid.Row="8" Text="Цена" Style="{StaticResource styleTextBlock}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="8" Margin="15 10 0 10">
+                        <TextBlock  Text="От: " Style="{StaticResource styleTextBlock}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <TextBox x:Name="PriceStart" Style="{StaticResource styleTextBox}" Width="60" Background="Transparent" Foreground="White" TextChanged="PriceStart_TextChanged"/>
+                        <TextBlock  Text=" До: " Style="{StaticResource styleTextBlock}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <TextBox x:Name="PriceEnd" Style="{StaticResource styleTextBox}" Width="60" Background="Transparent" Foreground="White" TextChanged="PriceEnd_TextChanged"/>
+                    </StackPanel>
+
+                </Grid>
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0.5*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+
+                    <TextBlock Grid.Column="0" Grid.Row="0" Text="Объем" Style="{StaticResource styleTextBlock}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <ComboBox Grid.Column="1" Grid.Row="0" x:Name="EngineCapacityComboBox" Height="30" Width="200" Margin="10" SelectionChanged="BodyworksComboBox_SelectionChanged">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding NameEngineCapacity}" Style="{StaticResource styleTextBlock}" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Black"/>
+                                    <TextBlock Text="л." Style="{StaticResource styleTextBlock}" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Black"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+
+                    <TextBlock Grid.Column="0" Grid.Row="1" Text="Топливо" Style="{StaticResource styleTextBlock}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <ComboBox Grid.Column="1" Grid.Row="1" x:Name="EngineTypesComboBox" Height="30" Width="200" Margin="10" SelectionChanged="BodyworksComboBox_SelectionChanged">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding NameEngineType}" Style="{StaticResource styleTextBlock}" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Black"/>
+                                    <TextBlock Text=" "/>
+                                    <TextBlock Text="{Binding Fuels.NameFuel}" Style="{StaticResource styleTextBlock}" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Black"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+
+                    <TextBlock Grid.Column="0" Grid.Row="2" Text="Мощность" Style="{StaticResource styleTextBlock}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="2" Margin="15 10 0 10">
+                        <TextBlock  Text="От: " Style="{StaticResource styleTextBlock}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <TextBox x:Name="HorsePowerStart" Style="{StaticResource styleTextBox}" Width="60" Background="Transparent" Foreground="White" SelectionChanged="HorsePowerStart_SelectionChanged"/>
+                        <TextBlock  Text=" До: " Style="{StaticResource styleTextBlock}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <TextBox x:Name="HorsePowerEnd" Style="{StaticResource styleTextBox}" Width="60" Background="Transparent" Foreground="White" SelectionChanged="HorsePowerEnd_SelectionChanged"/>
+                    </StackPanel>
+                </Grid>
+
+                <TextBlock x:Name="ClearSearch" Style="{StaticResource styleTextBlock}" Margin="5" HorizontalAlignment="Center" Text="Отчистить поиск" MouseLeftButtonUp="ClearSearch_Click" Foreground="#6fd649"/>
+            </StackPanel>
+
+
+
+            <Grid Grid.Column="1">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="0.2*"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
-                <TextBlock Grid.Column="0" Grid.Row="0" Text="Бренд" Style="{StaticResource styleTextBlock}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                <ComboBox Grid.Column="1" Grid.Row="0" x:Name="MarksComboBox" Height="40" Width="200" Margin="10" SelectionChanged="MarksComboBox_SelectionChanged">
-                    <ComboBox.ItemTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding NameMark}" Style="{StaticResource styleTextBlock}" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Black"/>
-                        </DataTemplate>
-                    </ComboBox.ItemTemplate>
-                </ComboBox>
+                <StackPanel Grid.Row="0">
+                    <TextBlock Text="Отображение каталога" Style="{StaticResource styleTextBlock}" FontSize="28"/>
+                    <StackPanel HorizontalAlignment="Left" Orientation="Horizontal" VerticalAlignment="Center">
+                        <RadioButton x:Name="OneProduct" Style="{StaticResource StyleRadioButton}" Height="40" Width="150" Margin="5 0" Content="Витрина 1" Click="OneProduct_Click"/>
+                        <RadioButton x:Name="FourProduct" Style="{StaticResource StyleRadioButton}" Height="40" Width="150" Margin="5 0" Content="Витрина 4" Click="FourProduct_Click"/>
+                        <RadioButton x:Name="ListProduct" Style="{StaticResource StyleRadioButton}" Height="40" Width="150" Margin="5 0" Content="Список" Click="ListProduct_Click" IsChecked="True"/>
 
-                <TextBlock Grid.Column="0" Grid.Row="1" Text="Модель" Style="{StaticResource styleTextBlock}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                <ComboBox Grid.Column="1" Grid.Row="1" x:Name="ModelsComboBox" Height="40" Width="200" Margin="10" SelectionChanged="ModelsComboBox_SelectionChanged">
-                    <ComboBox.ItemTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding NameModel}" Style="{StaticResource styleTextBlock}" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Black"/>
-                        </DataTemplate>
-                    </ComboBox.ItemTemplate>
-                </ComboBox>
+                        <Grid Margin="15 15">
+                            <StackPanel Orientation="Horizontal" Visibility="Visible" x:Name="ButtonHadlerOneProductDisplay">
+                                <Button x:Name="ButtonPreviousOneProduct" Margin="5" Content="Назад" Style="{StaticResource styleButton}" Height="40" Width="80" Click="ButtonPreviousOneProduct_Click"/>
+                                <Button x:Name="ButtonNextOneProduct"  Margin="5" Content="Вперед" Style="{StaticResource styleButton}" Height="40" Width="80" Click="ButtonNextOneProduct_Click"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Visibility="Hidden" x:Name="ButtonHadlerFourProductDisplay">
+                                <Button x:Name="ButtonPreviousFourProduct" Margin="5" Content="Назад" Style="{StaticResource styleButton}" Height="40" Width="80" Click="ButtonPreviousFourProduct_Click"/>
+                                <Button x:Name="ButtonNextFourProduct"  Margin="5" Content="Вперед" Style="{StaticResource styleButton}" Height="40" Width="80" Click="ButtonNextFourProduct_Click"/>
+                            </StackPanel>
+                        </Grid>
 
-                <TextBlock Grid.Column="0" Grid.Row="2" Text="Цвет" Style="{StaticResource styleTextBlock}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                <ComboBox Grid.Column="1" Grid.Row="2" x:Name="ColorsComboBox" Height="40" Width="200" Margin="10" SelectionChanged="ColorsComboBox_SelectionChanged">
-                    <ComboBox.ItemTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding NameColor}" Style="{StaticResource styleTextBlock}" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Black"/>
-                        </DataTemplate>
-                    </ComboBox.ItemTemplate>
-                </ComboBox>
+                        <Button x:Name="OpenBasketsPage" Content="Корзина" Style="{StaticResource styleButton}" Margin="15 0" Height="40" Width="100" Click="OpenBasketsPage_Click"/>
+                        <TextBlock x:Name="QuentytiProduct" Style="{StaticResource styleTextBlock}" Text="0" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="28"/>
 
-                <TextBlock Grid.Column="0" Grid.Row="3" Text="Коробка" Style="{StaticResource styleTextBlock}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                <ComboBox Grid.Column="1" Grid.Row="3" x:Name="TransmissionsComboBox" Height="40" Width="200" Margin="10" SelectionChanged="TransmissionsComboBox_SelectionChanged">
-                    <ComboBox.ItemTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding NameTransmission}" Style="{StaticResource styleTextBlock}" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Black"/>
-                        </DataTemplate>
-                    </ComboBox.ItemTemplate>
-                </ComboBox>
+                    </StackPanel>
 
-                <TextBlock Grid.Column="0" Grid.Row="4" Text="Руль" Style="{StaticResource styleTextBlock}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                <ComboBox Grid.Column="1" Grid.Row="4" x:Name="HandlebarsComboBox" Height="40" Width="200" Margin="10" SelectionChanged="HandlebarsComboBox_SelectionChanged">
-                    <ComboBox.ItemTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding NameHandlebar}" Style="{StaticResource styleTextBlock}" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Black"/>
-                        </DataTemplate>
-                    </ComboBox.ItemTemplate>
-                </ComboBox>
-                
-                <TextBlock Grid.Column="0" Grid.Row="5" Text="Привод" Style="{StaticResource styleTextBlock}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                <ComboBox Grid.Column="1" Grid.Row="5" x:Name="WheeldrivesComboBox" Height="40" Width="200" Margin="10" SelectionChanged="WheeldrivesComboBox_SelectionChanged">
-                    <ComboBox.ItemTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding NameWheeldrive}" Style="{StaticResource styleTextBlock}" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Black"/>
-                        </DataTemplate>
-                    </ComboBox.ItemTemplate>
-                </ComboBox>
+                </StackPanel>
 
-                <TextBlock Grid.Column="0" Grid.Row="6" Text="Кузов" Style="{StaticResource styleTextBlock}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                <ComboBox Grid.Column="1" Grid.Row="6" x:Name="BodyworksComboBox" Height="40" Width="200" Margin="10" SelectionChanged="BodyworksComboBox_SelectionChanged">
-                    <ComboBox.ItemTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding NameBodywork}" Style="{StaticResource styleTextBlock}" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Black"/>
-                        </DataTemplate>
-                    </ComboBox.ItemTemplate>
-                </ComboBox>
+                <Grid Grid.Row="1">
+                    <ScrollViewer Height="580">
+                        <ListBox x:Name="CatalogListBox" Grid.Row="1" Background="Transparent" BorderBrush="Transparent" ItemTemplate="{StaticResource TemplateListCatalog}"
+                      ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                            <ListBox.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel />
+                                </ItemsPanelTemplate>
+                            </ListBox.ItemsPanel>
+                        </ListBox>
+                    </ScrollViewer>
 
+                </Grid>
             </Grid>
+        </Grid>
 
-            <Button x:Name="ClearSearch" Style="{StaticResource styleButton}" Height="40" Width="200" Content="Отчистить поиск" Click="ClearSearch_Click"/>
-        </StackPanel>
-
-
-
-        <Grid Grid.Column="1">
+        <Grid x:Name="BasketGird" Background="Black" Visibility="Hidden">
             <Grid.RowDefinitions>
                 <RowDefinition Height="0.2*"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <StackPanel Grid.Row="0">
-                <TextBlock Text="Отображение каталога" Style="{StaticResource styleTextBlock}"/>
-                <StackPanel HorizontalAlignment="Left" Orientation="Horizontal">
-                    <RadioButton x:Name="OneProduct" Style="{StaticResource StyleRadioButton}" Height="40" Width="150" Margin="10 19" Content="Витрина 1" Click="OneProduct_Click"/>
-                    <RadioButton x:Name="FourProduct" Style="{StaticResource StyleRadioButton}" Height="40" Width="150" Margin="10 19" Content="Витрина 2" Click="FourProduct_Click"/>
-                    <RadioButton x:Name="ListProduct" Style="{StaticResource StyleRadioButton}" Height="40" Width="150" Margin="10 19" Content="Список" Click="ListProduct_Click" IsChecked="True"/>
+            <TextBlock x:Name="BackToCatalog" Margin="10" Text="Вернуться к каталогу" HorizontalAlignment="Left" VerticalAlignment="Center" Style="{StaticResource styleTextBlock}" Foreground="#6fd649" MouseLeftButtonUp="BackToCatalog_MouseLeftButtonUp"/>
+            <TextBlock x:Name="MakeOrder" Margin="10" Text="Оформить заказ" HorizontalAlignment="Right" VerticalAlignment="Center" Style="{StaticResource styleTextBlock}" Foreground="#6fd649" MouseLeftButtonUp="MakeOrder_MouseLeftButtonUp"/>
 
-                    <Grid>
-                        <StackPanel Orientation="Horizontal" Visibility="Hidden" x:Name="ButtonHadlerOneProductDisplay">
-                            <Button x:Name="ButtonPreviousOneProduct" Margin="5" Content="Назад" Style="{StaticResource styleButton}" Height="40" Width="80" Click="ButtonPreviousOneProduct_Click"/>
-                            <Button x:Name="ButtonNextOneProduct"  Margin="5" Content="Вперед" Style="{StaticResource styleButton}" Height="40" Width="80" Click="ButtonNextOneProduct_Click"/>
-                        </StackPanel>
-                        <StackPanel Orientation="Horizontal" Visibility="Hidden" x:Name="ButtonHadlerFourProductDisplay">
-                            <Button x:Name="ButtonPreviousFourProduct" Margin="5" Content="Назад" Style="{StaticResource styleButton}" Height="40" Width="80" Click="ButtonPreviousFourProduct_Click"/>
-                            <Button x:Name="ButtonNextFourProduct"  Margin="5" Content="Вперед" Style="{StaticResource styleButton}" Height="40" Width="80" Click="ButtonNextFourProduct_Click"/>
-                        </StackPanel>
-                    </Grid>
+            <StackPanel Grid.Row="1">
+
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Сумма заказа" Style="{StaticResource styleTextBlock}" FontSize="30" Foreground="#6fd649" Margin="10"/>
+                    <TextBlock x:Name="SumOrder" Style="{StaticResource styleTextBlock}" FontSize="30" Foreground="#6fd649" Margin="10"/>
+
                 </StackPanel>
+
+                <ListBox x:Name="BasketCatalog" ItemTemplate="{StaticResource TemplateBasket}"
+                         ScrollViewer.VerticalScrollBarVisibility="Visible" Background="Black">
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel />
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                </ListBox>
 
             </StackPanel>
 
-            <Grid Grid.Row="1">
-                <ScrollViewer Height="580">
-                    <ListBox x:Name="CatalogListBox" Grid.Row="1" Background="Transparent" BorderBrush="Transparent" ItemTemplate="{StaticResource TemplateListCatalog}"
-                      ScrollViewer.HorizontalScrollBarVisibility="Disabled">
-                        <ListBox.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <WrapPanel />
-                            </ItemsPanelTemplate>
-                        </ListBox.ItemsPanel>
-                    </ListBox>
-                </ScrollViewer>
-
-            </Grid>
         </Grid>
-
-
-        
-        
     </Grid>
+
 </UserControl>

@@ -19,13 +19,19 @@ namespace CarSales.View.MainView.Catalog
     public partial class CatalogUserControl : UserControl
     {
         List<Advertisements> advertisements;
+        List<Advertisements> HandlerBasketAdvertisements;
         List<Cars> cars;
         private List<int> IndexesCars { get; set; }
         private int IndexCatalog = 0;
+        private decimal additionsSum;
 
-        public CatalogUserControl()
+        int idUser;
+        public CatalogUserControl(int ID)
         {
+            idUser = ID;
+
             advertisements = new List<Advertisements>();
+            HandlerBasketAdvertisements = new List<Advertisements>();
             cars = new List<Cars>();
             IndexesCars = new List<int>();
             InitializeComponent();
@@ -46,6 +52,9 @@ namespace CarSales.View.MainView.Catalog
         }
         private void FourProduct_Click(object sender, RoutedEventArgs e)
         {
+
+            DataTemplate template = (DataTemplate)this.Resources["listTemplateSmall"];
+            CatalogListBox.ItemTemplate = template;
 
             ButtonHadlerOneProductDisplay.Visibility = Visibility.Hidden;
             ButtonHadlerFourProductDisplay.Visibility = Visibility.Visible;
@@ -126,11 +135,69 @@ namespace CarSales.View.MainView.Catalog
         // Переключение продуктов по 4
         private void ButtonPreviousFourProduct_Click(object sender, RoutedEventArgs e)
         {
+            int numberForCorrectDisplayDuringTransitions = 5;
+            int numberToDisplayWhenEmptyClicks = 3;
+            int numberForAccessingProductsByIndex = 3;
 
+
+            if (IndexCatalog - numberForAccessingProductsByIndex >= 0)
+            {
+                IndexCatalog -= numberForAccessingProductsByIndex;
+            }
+
+            if (IndexCatalog - numberForAccessingProductsByIndex >= 0)
+            {
+                var filtered = advertisements.Where(u => u.Id > IndexesCars[IndexCatalog] && u.Id < IndexesCars[IndexCatalog + numberForCorrectDisplayDuringTransitions]);
+                CatalogListBox.ItemsSource = filtered;
+            }
+            else
+            {
+                if (IndexCatalog + numberToDisplayWhenEmptyClicks < IndexesCars.Count())
+                {
+                    var filtered = advertisements.Where(u => u.Id >= IndexesCars[IndexCatalog] && u.Id <= IndexesCars[IndexCatalog + numberToDisplayWhenEmptyClicks]);
+                    CatalogListBox.ItemsSource = filtered;
+                }
+                else
+                {
+                    var filtered = advertisements.Where(u => u.Id >= IndexesCars[IndexCatalog] && u.Id <= IndexesCars[IndexesCars.Count() - 1]);
+                    CatalogListBox.ItemsSource = filtered;
+                }
+            }
         }
         private void ButtonNextFourProduct_Click(object sender, RoutedEventArgs e)
         {
+            int numberForCorrectDisplayDuringTransitions = 5;
+            int numberToDisplayFinalProducts = 1;
+            int numberForAccessingProductsByIndex = 3;
 
+            if (IndexCatalog + numberForAccessingProductsByIndex < IndexesCars.Count() - 1)
+            {
+                IndexCatalog += numberForAccessingProductsByIndex;
+                if (IndexCatalog + numberForAccessingProductsByIndex > IndexesCars.Count() - 1)
+                {
+                    IndexCatalog -= numberForAccessingProductsByIndex;
+                }
+            }
+
+            if (IndexCatalog + numberForCorrectDisplayDuringTransitions < IndexesCars.Count())
+            {
+                var filtered = advertisements.Where(u => u.Id > IndexesCars[IndexCatalog] && u.Id < IndexesCars[IndexCatalog + numberForCorrectDisplayDuringTransitions]);
+                CatalogListBox.ItemsSource = filtered;
+            }
+            else
+            {
+                if (IndexCatalog + numberToDisplayFinalProducts < IndexesCars.Count() - 1)
+                {
+                    var filtered = advertisements.Where(u => u.Id > IndexesCars[IndexCatalog + numberToDisplayFinalProducts] && u.Id <= IndexesCars[IndexesCars.Count() - 1]);
+                    CatalogListBox.ItemsSource = filtered;
+                }
+                else
+                {
+                    var filtered = advertisements.Where(u => u.Id >= IndexesCars[IndexCatalog] && u.Id <= IndexesCars[IndexesCars.Count() - 1]);
+                    CatalogListBox.ItemsSource = filtered;
+                }
+
+            }
         }
 
 
@@ -159,6 +226,7 @@ namespace CarSales.View.MainView.Catalog
                 Models model = (Models)ModelsComboBox.SelectedItem;
                 advertisements = advertisements.Where(a => a.Cars.MarkModel == model.Id).ToList();
                 CatalogListBox.ItemsSource = advertisements;
+                LoadIdFromSwitchProduct();
             }
         }
         private void ColorsComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -169,6 +237,7 @@ namespace CarSales.View.MainView.Catalog
                 Model.Colors color = (Model.Colors)ColorsComboBox.SelectedItem;
                 advertisements = advertisements.Where(a => a.Cars.Color == color.Id).ToList();
                 CatalogListBox.ItemsSource = advertisements;
+                LoadIdFromSwitchProduct();
             }
         }
         private void TransmissionsComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -179,6 +248,7 @@ namespace CarSales.View.MainView.Catalog
                 Transmissions transmission = (Transmissions)TransmissionsComboBox.SelectedItem;
                 advertisements = advertisements.Where(a => a.Cars.Transmission == transmission.Id).ToList();
                 CatalogListBox.ItemsSource = advertisements;
+                LoadIdFromSwitchProduct();
             }
         }
         private void HandlebarsComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -189,6 +259,7 @@ namespace CarSales.View.MainView.Catalog
                 Handlebars handlebar = (Handlebars)HandlebarsComboBox.SelectedItem;
                 advertisements = advertisements.Where(a => a.Cars.Handlebar == handlebar.Id).ToList();
                 CatalogListBox.ItemsSource = advertisements;
+                LoadIdFromSwitchProduct();
             }
         }
         private void WheeldrivesComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -199,6 +270,7 @@ namespace CarSales.View.MainView.Catalog
                 Wheeldrives wheeldrive = (Wheeldrives)WheeldrivesComboBox.SelectedItem;
                 advertisements = advertisements.Where(a => a.Cars.Wheeldrive == wheeldrive.Id).ToList();
                 CatalogListBox.ItemsSource = advertisements;
+                LoadIdFromSwitchProduct();
             }
         }
         private void BodyworksComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -207,10 +279,92 @@ namespace CarSales.View.MainView.Catalog
             if (selectedIndex > -1)
             {
                 Bodyworks bodywork = (Bodyworks)BodyworksComboBox.SelectedItem;
-                MessageBox.Show(bodywork.NameBodywork);
-
                 advertisements = advertisements.Where(a => a.Cars.Bodywork == bodywork.Id).ToList();
                 CatalogListBox.ItemsSource = advertisements;
+                LoadIdFromSwitchProduct();
+            }
+        }
+
+
+        // Поиск по вводимым данным
+        private void YearStart_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            try
+            {
+                var filter = advertisements.Where(a => a.Cars.Year >= Convert.ToInt32(YearStart.Text)).ToList();
+                CatalogListBox.ItemsSource = filter;
+                LoadIdFromSwitchProduct();
+            }
+            catch
+            {
+                MessageBox.Show("Введите число");
+            }
+        }
+        private void YearEnd_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            try
+            {
+                var filter = advertisements.Where(a => a.Cars.Year <= Convert.ToInt32(YearStart.Text)).ToList();
+                CatalogListBox.ItemsSource = filter;
+                LoadIdFromSwitchProduct();
+            }
+            catch
+            {
+                MessageBox.Show("Введите число");
+            }
+        }
+        private void PriceStart_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            try
+            {
+                var filter = advertisements.Where(a => a.Price >= Convert.ToInt32(PriceStart.Text)).ToList();
+                CatalogListBox.ItemsSource = filter;
+                LoadIdFromSwitchProduct();
+            }
+            catch
+            {
+                MessageBox.Show("Введите число");
+            }
+        }
+        private void PriceEnd_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            try
+            {
+                var filter = advertisements.Where(a => a.Price <= Convert.ToInt32(PriceStart.Text)).ToList();
+                CatalogListBox.ItemsSource = filter;
+                LoadIdFromSwitchProduct();
+            }
+            catch
+            {
+                MessageBox.Show("Введите число");
+            }
+        }
+        private void HorsePowerStart_SelectionChanged(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var filter = advertisements.Where(a => a.Cars.Engines.Horsepower >= Convert.ToInt32(HorsePowerStart.Text)).ToList();
+                CatalogListBox.ItemsSource = filter;
+                LoadIdFromSwitchProduct();
+            }
+            catch
+            {
+                MessageBox.Show("Введите число");
+
+            }
+        }
+        private void HorsePowerEnd_SelectionChanged(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var filter = advertisements.Where(a => a.Cars.Engines.Horsepower <= Convert.ToInt32(HorsePowerStart.Text)).ToList();
+                CatalogListBox.ItemsSource = filter;
+                LoadIdFromSwitchProduct();
+            }
+            catch
+            {
+                MessageBox.Show("Введите число");
+
             }
         }
 
@@ -220,9 +374,17 @@ namespace CarSales.View.MainView.Catalog
         {
             Advertisements curItem = (Advertisements)((ListBoxItem)CatalogListBox.ContainerFromElement((Button)sender)).Content;
             advertisements = advertisements.Where(a => a.Id != curItem.Id).ToList();
+            
+            HandlerBasketAdvertisements.Add(curItem);
+            additionsSum += (decimal)(curItem.Price);
+            SumOrder.Text = $"{additionsSum:0.00}";
 
+            int handlerAdd = Convert.ToInt32(QuentytiProduct.Text);
+            handlerAdd++;
+            QuentytiProduct.Text = $"{handlerAdd}";
+
+            LoadIdFromSwitchProduct();
             CatalogListBox.ItemsSource = advertisements;
-
         }
 
         // Отчистка поиска
@@ -244,8 +406,8 @@ namespace CarSales.View.MainView.Catalog
             {
                 advertisements = context.Advertisements.Where(a => a.Statuses.NameStatus == "Активен").ToList();
                 cars = context.Cars.ToList();
+                
                 // Заполнение комбобоксов для фильтрации
-
                 ModelsComboBox.ItemsSource = context.Models.ToList();
                 MarksComboBox.ItemsSource = context.Marks.ToList();
                 ColorsComboBox.ItemsSource = context.Colors.ToList();
@@ -253,6 +415,10 @@ namespace CarSales.View.MainView.Catalog
                 HandlebarsComboBox.ItemsSource = context.Handlebars.ToList();
                 WheeldrivesComboBox.ItemsSource = context.Wheeldrives.ToList();
                 BodyworksComboBox.ItemsSource = context.Bodyworks.ToList();
+
+                //
+                EngineCapacityComboBox.ItemsSource = context.EngineCapacity.ToList();
+                EngineTypesComboBox.ItemsSource = context.EngineCapacity.ToList();
 
                 List<Photos> photos = context.Photos.ToList();
                 foreach (var item in cars)
@@ -264,6 +430,92 @@ namespace CarSales.View.MainView.Catalog
 
             LoadIdFromSwitchProduct();
 
+        }
+
+
+        // Переходы между корзиной и каталогом
+        private void OpenBasketsPage_Click(object sender, RoutedEventArgs e)
+        {
+            BasketGird.Visibility = Visibility.Visible;
+            CatalogGrid.Visibility = Visibility.Hidden;
+            BasketCatalog.ItemsSource = HandlerBasketAdvertisements;
+        }
+        private void BackToCatalog_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            BasketGird.Visibility = Visibility.Hidden;
+            CatalogGrid.Visibility = Visibility.Visible;
+            if(HandlerBasketAdvertisements.Count == 0)
+            {
+                updateItems();
+            }
+        }
+
+
+        private void MakeOrder_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            if (HandlerBasketAdvertisements.Count != 0)
+            {
+                try
+                {
+                    using (var context = new CarSalesEntities())
+                    {
+                        var datetime = DateTime.Now;
+                        var onlydate = datetime.Date;
+                        Orders newOrder = new Orders()
+                        {
+                            User = idUser,
+                            Price = additionsSum,
+                            Date = onlydate
+                        };
+                        context.Orders.Add(newOrder);
+                        context.SaveChanges();
+
+                        var getOrder = context.Orders.SingleOrDefault(o => o.User == idUser && o.Price == additionsSum && o.Date == onlydate);
+
+                        foreach (var item in HandlerBasketAdvertisements)
+                        {
+                            Baskets productToBasket = new Baskets
+                            {
+                                Advertisement = item.Id,
+                                Order = getOrder.Id
+
+                            };
+                            context.Baskets.Add(productToBasket);
+                        }
+                        context.SaveChanges();
+                    }
+                    MessageBox.Show("Заказ оформлен");
+
+                    additionsSum = 0;
+                    QuentytiProduct.Text = $"{additionsSum:0.00}";
+                    SumOrder.Text = $"{additionsSum:0.00}";
+
+                    HandlerBasketAdvertisements.Clear();
+                    BasketCatalog.ItemsSource = HandlerBasketAdvertisements.ToList();
+                }
+                catch
+                {
+                    MessageBox.Show("Произшла непредвиденная ошибка, помолитесь");
+                }
+
+            }
+            else
+                MessageBox.Show("Товаров нет в корзине");
+        }
+
+        private void DeleteProduct_Click(object sender, RoutedEventArgs e)
+        {
+            Advertisements curItem = (Advertisements)((ListBoxItem)BasketCatalog.ContainerFromElement((Button)sender)).Content;
+            additionsSum -= curItem.Price;
+            SumOrder.Text = $"{additionsSum:0.00}";
+
+            int handlerSub = Convert.ToInt32(QuentytiProduct.Text);
+            handlerSub--;
+            QuentytiProduct.Text = $"{handlerSub}";
+
+            var newProducts = HandlerBasketAdvertisements.Where(u => u.Id != curItem.Id);
+            HandlerBasketAdvertisements.Remove(curItem);
+            BasketCatalog.ItemsSource = newProducts;
         }
     }
 }

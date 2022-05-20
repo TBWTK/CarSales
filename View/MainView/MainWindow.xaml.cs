@@ -33,7 +33,7 @@ namespace CarSales.View.MainView
 
         private void CatalogPage_Click(object sender, RoutedEventArgs e)
         {
-            PageChange.Content = new Catalog.CatalogUserControl();
+            PageChange.Content = new Catalog.CatalogUserControl(idUser);
 
             //PageChange.Content = new Catalog.AdvertisementsUserControl(idUser);
         }
