@@ -45,7 +45,7 @@ namespace CarSales.View.MainView
 
         private void StatPage_Click(object sender, RoutedEventArgs e)
         {
-
+            PageChange.Content = new Statistics.StatisticsUserControl();
         }
 
         // Бездекйствие пользователя
